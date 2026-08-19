@@ -5,6 +5,7 @@ import {
   secureTokenMatches,
   submissionsToCsv
 } from "../lib/wl-core.mjs";
+import { blobStorageStatus } from "../lib/vercel-wl-store.mjs";
 
 const completeTasks = { follow: true, like: true, repost: true, comment: true };
 
@@ -43,4 +44,30 @@ test("builds safe CSV and compares admin tokens", () => {
   assert.match(csv, /"kitty,fan"/);
   assert.equal(secureTokenMatches("secret", "secret"), true);
   assert.equal(secureTokenMatches("wrong", "secret"), false);
+});
+
+test("recognizes a Vercel Blob store connected through runtime OIDC", () => {
+  const previousStoreId = process.env.BLOB_STORE_ID;
+  const previousReadWriteToken = process.env.BLOB_READ_WRITE_TOKEN;
+  const previousOidcToken = process.env.VERCEL_OIDC_TOKEN;
+
+  try {
+    process.env.BLOB_STORE_ID = "store_test";
+    delete process.env.BLOB_READ_WRITE_TOKEN;
+    delete process.env.VERCEL_OIDC_TOKEN;
+
+    assert.deepEqual(blobStorageStatus(), {
+      configured: true,
+      provider: "vercel-blob-private"
+    });
+  } finally {
+    if (previousStoreId === undefined) delete process.env.BLOB_STORE_ID;
+    else process.env.BLOB_STORE_ID = previousStoreId;
+
+    if (previousReadWriteToken === undefined) delete process.env.BLOB_READ_WRITE_TOKEN;
+    else process.env.BLOB_READ_WRITE_TOKEN = previousReadWriteToken;
+
+    if (previousOidcToken === undefined) delete process.env.VERCEL_OIDC_TOKEN;
+    else process.env.VERCEL_OIDC_TOKEN = previousOidcToken;
+  }
 });
