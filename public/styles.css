@@ -34,11 +34,7 @@ body {
   min-width: 320px;
   margin: 0;
   color: var(--ink);
-  background:
-    linear-gradient(90deg, rgb(0 0 0 / 4%) 1px, transparent 1px),
-    linear-gradient(rgb(0 0 0 / 4%) 1px, transparent 1px),
-    var(--paper);
-  background-size: 28px 28px;
+  background: var(--paper);
   font-family: var(--font-body);
   overflow-x: clip;
   text-rendering: optimizeLegibility;
@@ -241,28 +237,23 @@ input:focus-visible {
 }
 
 .header-x {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  height: 48px;
-  padding: 4px 14px 4px 5px;
-  border: 2px solid var(--ink);
-  border-radius: 999px;
-  background: var(--white);
-  font-family: var(--font-display);
-  font-size: 0.76rem;
-  transition: transform 180ms ease, box-shadow 180ms ease;
-}
-
-.header-x > span:first-child {
   display: grid;
-  width: 36px;
-  height: 36px;
-  place-items: center;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 2px solid var(--ink);
   border-radius: 50%;
   color: var(--lime);
   background: var(--ink);
-  font-size: 1rem;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.x-logo {
+  width: 19px;
+  height: 19px;
+  fill: currentColor;
 }
 
 .header-x:hover {
@@ -350,19 +341,12 @@ main {
   border: var(--border);
   border-top: 0;
   border-radius: 0 0 34px 34px;
-  background:
-    radial-gradient(circle at 13% 35%, rgb(255 255 255 / 55%) 0 4px, transparent 5px),
-    radial-gradient(circle at 87% 21%, rgb(9 9 9 / 16%) 0 3px, transparent 4px),
-    linear-gradient(127deg, transparent 0 56%, rgb(255 255 255 / 28%) 56% 75%, transparent 75%),
-    var(--lime);
-  background-size: 38px 38px, 46px 46px, auto, auto;
+  background: var(--lime);
 }
 
 .hero::before,
 .hero::after {
-  position: absolute;
-  content: "";
-  pointer-events: none;
+  content: none;
 }
 
 .hero::before {
@@ -1233,14 +1217,7 @@ main {
 }
 
 .game-grid-bg {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(rgb(255 255 255 / 8%) 2px, transparent 2px),
-    linear-gradient(90deg, rgb(255 255 255 / 8%) 2px, transparent 2px);
-  background-size: 38px 38px;
-  mask-image: linear-gradient(to bottom, black, transparent 85%);
-  pointer-events: none;
+  display: none;
 }
 
 .game-topline {
@@ -1430,14 +1407,6 @@ main {
   image-rendering: pixelated;
 }
 
-.scanlines {
-  position: absolute;
-  z-index: 1;
-  inset: 0;
-  background: repeating-linear-gradient(0deg, transparent 0 5px, rgb(9 9 9 / 10%) 5px 7px);
-  pointer-events: none;
-}
-
 .player-tag,
 .level-tag {
   position: absolute;
@@ -1581,11 +1550,7 @@ main {
   min-height: 850px;
   padding: 150px clamp(28px, 4vw, 60px) 80px;
   border-inline: var(--border);
-  background:
-    radial-gradient(circle at 12% 80%, var(--pink) 0 3px, transparent 4px),
-    linear-gradient(145deg, transparent 0 65%, rgb(198 255 0 / 38%) 65%),
-    var(--cream);
-  background-size: 32px 32px, auto, auto;
+  background: var(--cream);
 }
 
 .about-hero h1 {
@@ -2073,12 +2038,10 @@ main {
 }
 
 .footer-x-link {
-  display: flex;
+  display: grid;
   align-items: center;
-  gap: 12px;
-  width: max-content;
-  font-family: var(--font-display);
-  font-size: 0.82rem;
+  width: 42px;
+  height: 42px;
 }
 
 .footer-x-icon {
@@ -2090,6 +2053,11 @@ main {
   border-radius: 50%;
   color: var(--ink);
   background: var(--lime);
+}
+
+.footer-x-icon .x-logo {
+  width: 17px;
+  height: 17px;
 }
 
 .footer-social p {
@@ -2419,9 +2387,9 @@ main {
     border-width: 1px;
   }
 
-  .header-x > span:first-child {
-    width: 32px;
-    height: 32px;
+  .header-x .x-logo {
+    width: 17px;
+    height: 17px;
   }
 
   .hero {

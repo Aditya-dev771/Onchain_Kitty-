@@ -1,7 +1,8 @@
 const config = window.ONCHAIN_KITTY_CONFIG || {
   xHandle: "@Onchain_Kitty",
   xProfileUrl: "https://x.com/Onchain_Kitty",
-  xPostUrl: "https://x.com/Onchain_Kitty",
+  xPostUrl: "https://x.com/Onchain_Kitty/status/2090028915503063233",
+  xPostId: "2090028915503063233",
   campaignImages: ["/assets/onchain-kitty.jpg"],
   shareText: "Now I'm super bullish on @Onchain_Kitty."
 };
@@ -10,14 +11,39 @@ const TASK_STORAGE_KEY = "onchain-kitty-wl-tasks-v1";
 const SUBMISSION_STORAGE_KEY = "onchain-kitty-wl-submission-v1";
 const validRoutes = new Set(["home", "game", "about", "terms", "privacy"]);
 
+function campaignPostId() {
+  const configuredId = String(config.xPostId || "").trim();
+  if (/^\d+$/.test(configuredId)) return configuredId;
+  return String(config.xPostUrl || "").match(/\/status\/(\d+)/)?.[1] || "";
+}
+
+function xIntentUrl(action) {
+  const screenName = String(config.xHandle || "Onchain_Kitty").replace(/^@/, "");
+  const postId = campaignPostId();
+
+  if (action === "follow") {
+    return `https://twitter.com/intent/follow?screen_name=${encodeURIComponent(screenName)}`;
+  }
+
+  if (!postId) return config.xPostUrl;
+
+  const intentPaths = {
+    like: "like",
+    repost: "retweet",
+    comment: "tweet"
+  };
+  const queryKey = action === "comment" ? "in_reply_to" : "tweet_id";
+  return `https://twitter.com/intent/${intentPaths[action]}?${queryKey}=${encodeURIComponent(postId)}`;
+}
+
 const taskDefinitions = [
   {
     id: "follow",
     number: "01",
     label: "Follow Onchain Kitty",
     description: `Follow ${config.xHandle} on X.`,
-    action: "Open profile",
-    url: config.xProfileUrl,
+    action: "Follow on X",
+    url: xIntentUrl("follow"),
     accent: "lime"
   },
   {
@@ -25,8 +51,8 @@ const taskDefinitions = [
     number: "02",
     label: "Like the X Post",
     description: "Show the campaign post some onchain love.",
-    action: "Open post",
-    url: config.xPostUrl,
+    action: "Like on X",
+    url: xIntentUrl("like"),
     accent: "pink"
   },
   {
@@ -34,8 +60,8 @@ const taskDefinitions = [
     number: "03",
     label: "Repost the X Post",
     description: "Send the Kitty signal across the timeline.",
-    action: "Open post",
-    url: config.xPostUrl,
+    action: "Repost on X",
+    url: xIntentUrl("repost"),
     accent: "violet"
   },
   {
@@ -43,8 +69,8 @@ const taskDefinitions = [
     number: "04",
     label: "Comment on the Post",
     description: "Tell the timeline why you are bullish.",
-    action: "Open post",
-    url: config.xPostUrl,
+    action: "Comment on X",
+    url: xIntentUrl("comment"),
     accent: "orange"
   }
 ];
@@ -113,12 +139,12 @@ function taskCardTemplate(task) {
   const buttonLabel = taskState.complete
     ? "Completed"
     : taskState.opened
-      ? "Confirm done"
+      ? "Mark completed"
       : task.action;
   const statusLabel = taskState.complete
     ? "TASK COMPLETE"
     : taskState.opened
-      ? "RETURNED FROM X?"
+      ? "ACTION OPENED"
       : "READY";
 
   return `
@@ -190,7 +216,7 @@ function heroTemplate() {
           />
           <div class="kitty-frame__footer">
             <span>STATUS: CURIOUS</span>
-            <span>CHAIN: ONLINE</span>
+            <span>CHAIN: ROBINHOOD</span>
           </div>
         </div>
         <div class="round-sticker round-sticker--top" aria-hidden="true">100%<br />ONCHAIN<br />ENERGY</div>
@@ -354,7 +380,6 @@ function homeTemplate() {
 function gameTemplate() {
   return `
     <section class="game-page page-shell" aria-labelledby="game-title">
-      <div class="game-grid-bg" aria-hidden="true"></div>
       <div class="game-topline reveal">
         <span>ONCHAIN KITTY // GAME MODULE</span>
         <span class="not-live-pill"><span></span> NOT PLAYABLE YET</span>
@@ -386,12 +411,7 @@ function gameTemplate() {
               <div><i></i><i></i><i></i></div>
             </div>
             <div class="game-window__screen">
-              <div class="scanlines" aria-hidden="true"></div>
-              <img src="/assets/onchain-kitty.jpg" alt="Onchain Kitty waiting inside a decorative game screen" width="1536" height="1536" />
-              <span class="player-tag">P1 // KITTY</span>
-              <span class="level-tag">LEVEL: ???</span>
-              <span class="crosshair crosshair--one" aria-hidden="true">+</span>
-              <span class="crosshair crosshair--two" aria-hidden="true">+</span>
+              <img src="/assets/onchain-kitty.jpg" alt="Official Onchain Kitty character" width="1536" height="1536" />
             </div>
           </div>
           <div class="controller-card" aria-hidden="true">
