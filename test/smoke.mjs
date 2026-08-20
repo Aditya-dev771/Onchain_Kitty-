@@ -46,6 +46,20 @@ try {
   const home = await homeResponse.text();
   assert(homeResponse.ok && home.includes("Onchain Kitty"), "Home shell failed to load.");
 
+  const [configResponse, appResponse] = await Promise.all([
+    fetch(`${baseUrl}/site-config.js`),
+    fetch(`${baseUrl}/app.js`)
+  ]);
+  const [configSource, appSource] = await Promise.all([
+    configResponse.text(),
+    appResponse.text()
+  ]);
+  assert(configSource.includes("2090426837277257784"), "Campaign post config is stale.");
+  assert(appSource.includes("in_reply_to"), "Comment task is not pinned to the campaign post.");
+  assert(appSource.includes("platform.twitter.com/embed/Tweet.html"), "Campaign post embed is missing.");
+  const contentSecurityPolicy = homeResponse.headers.get("content-security-policy") || "";
+  assert(contentSecurityPolicy.includes("frame-src https://platform.twitter.com"), "X embed CSP allowance is missing.");
+
   const invalidResponse = await fetch(`${baseUrl}/api/wl`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
