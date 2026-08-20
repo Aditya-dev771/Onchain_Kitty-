@@ -40,7 +40,6 @@ const SECURITY_HEADERS = {
     "img-src 'self' data:",
     "connect-src 'self'",
     "font-src 'self'",
-    "frame-src https://platform.twitter.com",
     "object-src 'none'",
     "base-uri 'self'",
     "frame-ancestors 'none'",
