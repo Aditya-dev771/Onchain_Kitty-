@@ -54,11 +54,11 @@ try {
     configResponse.text(),
     appResponse.text()
   ]);
-  assert(configSource.includes("2090426837277257784"), "Campaign post config is stale.");
+  assert(configSource.includes("2090431480162103501"), "Campaign post config is stale.");
   assert(appSource.includes("in_reply_to"), "Comment task is not pinned to the campaign post.");
-  assert(appSource.includes("platform.twitter.com/embed/Tweet.html"), "Campaign post embed is missing.");
-  const contentSecurityPolicy = homeResponse.headers.get("content-security-policy") || "";
-  assert(contentSecurityPolicy.includes("frame-src https://platform.twitter.com"), "X embed CSP allowance is missing.");
+  assert(!appSource.includes("platform.twitter.com/embed/Tweet.html"), "Removed campaign embed is still present.");
+  assert(appSource.includes("completed automatically"), "Task clicks do not auto-complete.");
+  assert(appSource.includes("data-new-application"), "Submit-another-wallet action is missing.");
 
   const invalidResponse = await fetch(`${baseUrl}/api/wl`, {
     method: "POST",
