@@ -245,9 +245,22 @@ function successTemplate() {
             <span class="quote-mark" aria-hidden="true">«</span>${shareCopy}<span class="quote-mark" aria-hidden="true">»</span>
           </blockquote>
 
+          <p class="share-attachment-note">
+            Download the Kitty image first. Then open X and attach it to the prefilled post.
+          </p>
+
           <div class="success-actions">
+            <a
+              class="max-button max-button--download"
+              href="${escapeHtml(image)}"
+              download="onchain-kitty-share.jpg"
+              data-download-share-image
+            >
+              <span>1. DOWNLOAD IMAGE</span>
+              <span class="button-arrow" aria-hidden="true">↓</span>
+            </a>
             <button class="max-button max-button--lime" type="button" data-share-x>
-              <span>SHARE ON X</span>
+              <span>2. SHARE ON X</span>
               <span class="button-arrow" aria-hidden="true">↗</span>
             </button>
             <button class="max-button max-button--dark" type="button" data-new-application>

@@ -1132,10 +1132,35 @@ main {
   font-weight: 900;
 }
 
+.success-panel__copy > .share-attachment-note {
+  margin: 0 0 20px;
+  padding: 14px 16px;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  background: var(--lime);
+  box-shadow: 4px 4px 0 var(--ink);
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
 .success-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
+}
+
+.max-button--download {
+  color: var(--white);
+  background: var(--violet);
+  box-shadow: 6px 6px 0 var(--pink);
+}
+
+.max-button--download .button-arrow {
+  border-color: var(--white);
+  color: var(--ink);
+  background: var(--lime);
 }
 
 .icon-button {
