@@ -1,8 +1,8 @@
 const config = window.ONCHAIN_KITTY_CONFIG || {
   xHandle: "@Onchain_Kitty",
   xProfileUrl: "https://x.com/Onchain_Kitty",
-  xPostUrl: "https://x.com/Onchain_Kitty/status/2090028915503063233",
-  xPostId: "2090028915503063233",
+  xPostUrl: "https://x.com/Onchain_Kitty/status/2088463020209144123",
+  xPostId: "2088463020209144123",
   campaignImages: ["/assets/onchain-kitty.jpg"],
   shareText: "Now I'm super bullish on @Onchain_Kitty."
 };
