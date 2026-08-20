@@ -1,8 +1,8 @@
 const config = window.ONCHAIN_KITTY_CONFIG || {
   xHandle: "@Onchain_Kitty",
   xProfileUrl: "https://x.com/Onchain_Kitty",
-  xPostUrl: "https://x.com/Onchain_Kitty/status/2088463020209144123",
-  xPostId: "2088463020209144123",
+  xPostUrl: "https://x.com/Onchain_Kitty/status/2090426837277257784",
+  xPostId: "2090426837277257784",
   campaignImages: ["/assets/onchain-kitty.jpg"],
   shareText: "Now I'm super bullish on @Onchain_Kitty."
 };
@@ -276,6 +276,48 @@ function successTemplate() {
   `;
 }
 
+function campaignPostTemplate() {
+  const postId = campaignPostId();
+  const postUrl = String(config.xPostUrl || "").trim();
+
+  if (!postId || !postUrl) return "";
+
+  const embedUrl = `https://platform.twitter.com/embed/Tweet.html?dnt=true&id=${encodeURIComponent(postId)}&theme=dark`;
+
+  return `
+    <section class="campaign-post reveal" aria-labelledby="campaign-post-title">
+      <div class="campaign-post__copy">
+        <span class="section-tag section-tag--lime">CAMPAIGN POST // LIVE</span>
+        <h3 id="campaign-post-title">THE KITTY<br /><em>SIGNAL</em></h3>
+        <p>Use this official post for the Like, Repost, and Comment missions below.</p>
+        <a
+          class="max-button max-button--lime campaign-post__link"
+          href="${escapeHtml(postUrl)}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span>OPEN POST ON X</span>
+          <span class="button-arrow" aria-hidden="true">↗</span>
+        </a>
+      </div>
+
+      <div class="campaign-post__embed">
+        <iframe
+          src="${escapeHtml(embedUrl)}"
+          title="Onchain Kitty campaign post on X"
+          loading="lazy"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+        ></iframe>
+        <p class="campaign-post__fallback">
+          X embed unavailable?
+          <a href="${escapeHtml(postUrl)}" target="_blank" rel="noopener noreferrer">Open the post directly.</a>
+        </p>
+      </div>
+    </section>
+  `;
+}
+
 function applicationTemplate() {
   const count = completedTaskCount();
   const eligible = allTasksComplete();
@@ -294,6 +336,8 @@ function applicationTemplate() {
             <span class="honesty-note">Task completion is self-confirmed. X opens in a new tab.</span>
           </div>
         </div>
+
+        ${campaignPostTemplate()}
 
         <div class="mission-progress reveal" aria-label="${count} of 4 tasks completed">
           <div class="mission-progress__copy">
