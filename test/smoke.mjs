@@ -59,6 +59,14 @@ try {
   assert(!appSource.includes("platform.twitter.com/embed/Tweet.html"), "Removed campaign embed is still present.");
   assert(appSource.includes("completed automatically"), "Task clicks do not auto-complete.");
   assert(appSource.includes("data-new-application"), "Submit-another-wallet action is missing.");
+  assert(appSource.includes("data-download-share-image"), "Share-image download action is missing.");
+  assert(appSource.includes('download="onchain-kitty-share.jpg"'), "Share-image download filename is missing.");
+
+  const shareImageResponse = await fetch(`${baseUrl}/assets/onchain-kitty.jpg`);
+  assert(
+    shareImageResponse.ok && shareImageResponse.headers.get("content-type") === "image/jpeg",
+    "Share image failed to load."
+  );
 
   const invalidResponse = await fetch(`${baseUrl}/api/wl`, {
     method: "POST",
