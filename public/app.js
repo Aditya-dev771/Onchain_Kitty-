@@ -1,13 +1,13 @@
 const config = window.ONCHAIN_KITTY_CONFIG || {
   xHandle: "@Onchain_Kitty",
   xProfileUrl: "https://x.com/Onchain_Kitty",
-  xPostUrl: "https://x.com/Onchain_Kitty/status/2090426837277257784",
-  xPostId: "2090426837277257784",
+  xPostUrl: "https://x.com/Onchain_Kitty/status/2090431480162103501",
+  xPostId: "2090431480162103501",
   campaignImages: ["/assets/onchain-kitty.jpg"],
   shareText: "Now I'm super bullish on @Onchain_Kitty."
 };
 
-const TASK_STORAGE_KEY = "onchain-kitty-wl-tasks-v1";
+const TASK_STORAGE_KEY = "onchain-kitty-wl-tasks-v2";
 const SUBMISSION_STORAGE_KEY = "onchain-kitty-wl-submission-v1";
 const validRoutes = new Set(["home", "game", "about", "terms", "privacy"]);
 
@@ -136,16 +136,8 @@ function showToast(message) {
 
 function taskCardTemplate(task) {
   const taskState = state.tasks[task.id] || { opened: false, complete: false };
-  const buttonLabel = taskState.complete
-    ? "Completed"
-    : taskState.opened
-      ? "Mark completed"
-      : task.action;
-  const statusLabel = taskState.complete
-    ? "TASK COMPLETE"
-    : taskState.opened
-      ? "ACTION OPENED"
-      : "READY";
+  const buttonLabel = taskState.complete ? "Open again" : task.action;
+  const statusLabel = taskState.complete ? "TASK COMPLETE" : "READY";
 
   return `
     <article class="task-card task-card--${task.accent} ${taskState.complete ? "task-card--complete" : ""} reveal" data-task-card="${task.id}">
@@ -164,11 +156,10 @@ function taskCardTemplate(task) {
         class="max-button task-action"
         type="button"
         data-task-action="${task.id}"
-        ${taskState.complete ? "disabled" : ""}
         aria-label="${buttonLabel}: ${task.label}"
       >
         <span>${buttonLabel}</span>
-        <span class="button-arrow" aria-hidden="true">${taskState.complete ? "✓" : "↗"}</span>
+        <span class="button-arrow" aria-hidden="true">↗</span>
       </button>
       <span class="task-sticker" aria-hidden="true">${taskState.complete ? "DONE!" : "DO IT"}</span>
     </article>
@@ -259,6 +250,10 @@ function successTemplate() {
               <span>SHARE ON X</span>
               <span class="button-arrow" aria-hidden="true">↗</span>
             </button>
+            <button class="max-button max-button--dark" type="button" data-new-application>
+              <span>SUBMIT ANOTHER WALLET</span>
+              <span class="button-arrow" aria-hidden="true">↻</span>
+            </button>
             <button class="icon-button" type="button" data-copy-share aria-label="Copy share text">COPY TEXT</button>
           </div>
         </div>
@@ -271,48 +266,6 @@ function successTemplate() {
           <img src="${escapeHtml(image)}" alt="Onchain Kitty campaign visual" width="1536" height="1536" loading="lazy" />
           <figcaption>One signal. Many possible Kitty drops.</figcaption>
         </figure>
-      </div>
-    </section>
-  `;
-}
-
-function campaignPostTemplate() {
-  const postId = campaignPostId();
-  const postUrl = String(config.xPostUrl || "").trim();
-
-  if (!postId || !postUrl) return "";
-
-  const embedUrl = `https://platform.twitter.com/embed/Tweet.html?dnt=true&id=${encodeURIComponent(postId)}&theme=dark`;
-
-  return `
-    <section class="campaign-post reveal" aria-labelledby="campaign-post-title">
-      <div class="campaign-post__copy">
-        <span class="section-tag section-tag--lime">CAMPAIGN POST // LIVE</span>
-        <h3 id="campaign-post-title">THE KITTY<br /><em>SIGNAL</em></h3>
-        <p>Use this official post for the Like, Repost, and Comment missions below.</p>
-        <a
-          class="max-button max-button--lime campaign-post__link"
-          href="${escapeHtml(postUrl)}"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <span>OPEN POST ON X</span>
-          <span class="button-arrow" aria-hidden="true">↗</span>
-        </a>
-      </div>
-
-      <div class="campaign-post__embed">
-        <iframe
-          src="${escapeHtml(embedUrl)}"
-          title="Onchain Kitty campaign post on X"
-          loading="lazy"
-          referrerpolicy="strict-origin-when-cross-origin"
-          allowfullscreen
-        ></iframe>
-        <p class="campaign-post__fallback">
-          X embed unavailable?
-          <a href="${escapeHtml(postUrl)}" target="_blank" rel="noopener noreferrer">Open the post directly.</a>
-        </p>
       </div>
     </section>
   `;
@@ -332,12 +285,10 @@ function applicationTemplate() {
             <h2 id="wl-title">WL<br /><em>APPLICATION</em></h2>
           </div>
           <div class="section-heading__side">
-            <p>Complete the four X missions. Confirm each one here. Then drop your EVM wallet.</p>
-            <span class="honesty-note">Task completion is self-confirmed. X opens in a new tab.</span>
+            <p>Complete the four X missions. Each one marks complete when its X action opens. Then drop your EVM wallet.</p>
+            <span class="honesty-note">Completed task links stay active, so you can open every X action again.</span>
           </div>
         </div>
-
-        ${campaignPostTemplate()}
 
         <div class="mission-progress reveal" aria-label="${count} of 4 tasks completed">
           <div class="mission-progress__copy">
@@ -689,18 +640,20 @@ function attachHomeEvents() {
       const taskId = button.dataset.taskAction;
       const task = taskDefinitions.find((item) => item.id === taskId);
       const taskState = state.tasks[taskId];
-      if (!task || !taskState || taskState.complete) return;
+      if (!task || !taskState) return;
 
-      if (!taskState.opened) {
-        window.open(task.url, "_blank", "noopener,noreferrer");
-        taskState.opened = true;
-      } else {
-        taskState.complete = true;
-      }
+      const wasComplete = taskState.complete;
+      window.open(task.url, "_blank", "noopener,noreferrer");
+      taskState.opened = true;
+      taskState.complete = true;
 
       saveTaskState();
-      renderRoute({ preserveScroll: true });
-      if (taskState.complete) showToast(`${task.label} marked complete.`);
+      if (wasComplete) {
+        showToast(`${task.label} opened again.`);
+      } else {
+        renderRoute({ preserveScroll: true });
+        showToast(`${task.label} completed automatically.`);
+      }
     });
   });
 
@@ -719,6 +672,15 @@ function attachHomeEvents() {
     } catch {
       showToast("Copy was blocked. Select the text manually.");
     }
+  });
+
+  document.querySelector("[data-new-application]")?.addEventListener("click", () => {
+    state.submission = null;
+    state.submitting = false;
+    localStorage.removeItem(SUBMISSION_STORAGE_KEY);
+    renderRoute({ preserveScroll: true });
+    document.querySelector("#wl-application")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    showToast("Ready for another wallet.");
   });
 }
 

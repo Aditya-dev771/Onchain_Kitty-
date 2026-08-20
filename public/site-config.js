@@ -3,8 +3,8 @@ window.ONCHAIN_KITTY_CONFIG = Object.freeze({
   xProfileUrl: "https://x.com/Onchain_Kitty",
 
   // The current website announcement used by the Like, Repost, and Comment tasks.
-  xPostUrl: "https://x.com/Onchain_Kitty/status/2090426837277257784",
-  xPostId: "2090426837277257784",
+  xPostUrl: "https://x.com/Onchain_Kitty/status/2090431480162103501",
+  xPostId: "2090431480162103501",
 
   // Add future promotional images here. One entry is selected after each submission.
   campaignImages: [
