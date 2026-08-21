@@ -55,7 +55,11 @@ try {
     appResponse.text()
   ]);
   assert(configSource.includes("2090431480162103501"), "Campaign post config is stale.");
-  assert(appSource.includes("in_reply_to"), "Comment task is not pinned to the campaign post.");
+  assert(
+    appSource.includes("https://x.com/intent/tweet?in_reply_to="),
+    "Comment task is not pinned to the campaign post."
+  );
+  assert(!appSource.includes("https://twitter.com/intent/"), "Legacy X intent domain is still in use.");
   assert(!appSource.includes("platform.twitter.com/embed/Tweet.html"), "Removed campaign embed is still present.");
   assert(appSource.includes("completed automatically"), "Task clicks do not auto-complete.");
   assert(appSource.includes("data-new-application"), "Submit-another-wallet action is missing.");
