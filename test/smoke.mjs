@@ -55,10 +55,9 @@ try {
     appResponse.text()
   ]);
   assert(configSource.includes("2090431480162103501"), "Campaign post config is stale.");
-  assert(
-    appSource.includes("https://x.com/intent/tweet?in_reply_to="),
-    "Comment task is not pinned to the campaign post."
-  );
+  assert(appSource.includes('if (action === "comment") return config.xPostUrl;'), "Comment task does not open the exact campaign post.");
+  assert(!appSource.includes("in_reply_to=${"), "Fragile mobile reply intent is still in use.");
+  assert(appSource.includes("Open Post & Reply"), "Comment task does not explain the direct-post reply flow.");
   assert(!appSource.includes("https://twitter.com/intent/"), "Legacy X intent domain is still in use.");
   assert(!appSource.includes("platform.twitter.com/embed/Tweet.html"), "Removed campaign embed is still present.");
   assert(appSource.includes("completed automatically"), "Task clicks do not auto-complete.");
