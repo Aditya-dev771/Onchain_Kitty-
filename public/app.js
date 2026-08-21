@@ -27,9 +27,10 @@ function xIntentUrl(action) {
 
   if (!postId) return config.xPostUrl;
 
-  if (action === "comment") {
-    return `https://x.com/intent/tweet?in_reply_to=${encodeURIComponent(postId)}`;
-  }
+  // X for Android currently drops the in_reply_to parameter from Web Intents
+  // and opens a standalone composer. Opening the canonical post is the only
+  // reliable cross-platform way to keep the user's reply on this campaign.
+  if (action === "comment") return config.xPostUrl;
 
   const intentPaths = {
     like: "like",
@@ -70,8 +71,8 @@ const taskDefinitions = [
     id: "comment",
     number: "04",
     label: "Comment on the Post",
-    description: "Reply directly to the campaign post.",
-    action: "Comment on X",
+    description: "Open the exact campaign post, then tap Reply in X.",
+    action: "Open Post & Reply",
     url: xIntentUrl("comment"),
     accent: "orange"
   }
