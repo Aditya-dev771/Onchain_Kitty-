@@ -22,18 +22,20 @@ function xIntentUrl(action) {
   const postId = campaignPostId();
 
   if (action === "follow") {
-    return `https://twitter.com/intent/follow?screen_name=${encodeURIComponent(screenName)}`;
+    return `https://x.com/intent/follow?screen_name=${encodeURIComponent(screenName)}`;
   }
 
   if (!postId) return config.xPostUrl;
 
+  if (action === "comment") {
+    return `https://x.com/intent/tweet?in_reply_to=${encodeURIComponent(postId)}`;
+  }
+
   const intentPaths = {
     like: "like",
-    repost: "retweet",
-    comment: "tweet"
+    repost: "retweet"
   };
-  const queryKey = action === "comment" ? "in_reply_to" : "tweet_id";
-  return `https://twitter.com/intent/${intentPaths[action]}?${queryKey}=${encodeURIComponent(postId)}`;
+  return `https://x.com/intent/${intentPaths[action]}?tweet_id=${encodeURIComponent(postId)}`;
 }
 
 const taskDefinitions = [
@@ -68,7 +70,7 @@ const taskDefinitions = [
     id: "comment",
     number: "04",
     label: "Comment on the Post",
-    description: "Tell the timeline why you are bullish.",
+    description: "Reply directly to the campaign post.",
     action: "Comment on X",
     url: xIntentUrl("comment"),
     accent: "orange"
@@ -674,7 +676,7 @@ function attachHomeEvents() {
   if (walletForm) walletForm.addEventListener("submit", submitApplication);
 
   document.querySelector("[data-share-x]")?.addEventListener("click", () => {
-    const intentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(config.shareText)}`;
+    const intentUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(config.shareText)}`;
     window.open(intentUrl, "_blank", "noopener,noreferrer");
   });
 
